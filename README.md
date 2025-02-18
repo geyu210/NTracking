@@ -24,6 +24,7 @@ adduser <username>
 usermod -aG sudo <username>
 su <username>
 cd (make sure and do the cd to change to correct home folder !!!)
+sudo usermod -aG docker $USER
 ```
 
 # to Run

@@ -460,7 +460,7 @@ services:
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana
-    user: "1000:1000"
+    user: "1001:1001"
     ports:
       - $GRAFANA_PORT:3000
     volumes:
