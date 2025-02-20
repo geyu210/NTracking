@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vtrack="2.0 test "
+vtrack="2.0 "
 
 # sudo rm -f /usr/bin/anms.sh* && sudo wget -P /usr/bin https://raw.githubusercontent.com/geyu210/NTracking/main/anm/scripts/anms.sh && sudo chmod u+x /usr/bin/anms.sh
 
@@ -36,7 +36,7 @@ CheckSetUp() {
             # create blocking file
             touch /var/antctl/block
         fi
-        echo "existing install found loading info" && echo
+        echo "existing install found loading info test" && echo
         . /var/antctl/system
         . /var/antctl/counters
         rm /var/antctl/counters
