@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-vtrack="2.0 "
+vtrack="2.0 test "
 
-# sudo rm -f /usr/bin/anms.sh* && sudo wget -P /usr/bin https://raw.githubusercontent.com/safenetforum-community/NTracking/main/anm/scripts/anms.sh && sudo chmod u+x /usr/bin/anms.sh
+# sudo rm -f /usr/bin/anms.sh* && sudo wget -P /usr/bin https://raw.githubusercontent.com/geyu210/NTracking/main/anm/scripts/anms.sh && sudo chmod u+x /usr/bin/anms.sh
 
 time_min=$(date +"%M")
 time_hour=$(date +"%H")
