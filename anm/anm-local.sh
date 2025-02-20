@@ -8,8 +8,8 @@ NodeRestarVer2="0.2.6"
 
 #run with
 # bash <(curl -s https://raw.githubusercontent.com/safenetforum-community/NTracking/main/anm/anm-local.sh)
-# sudo rm -f /usr/bin/anms.sh* && sudo wget -P /usr/bin https://raw.githubusercontent.com/safenetforum-community/NTracking/main/anm/scripts/anms.sh && sudo chmod u+x /usr/bin/anms.sh
-Location="https://raw.githubusercontent.com/safenetforum-community/NTracking/main/"
+# sudo rm -f /usr/bin/anms.sh* && sudo wget -P /usr/bin https://raw.githubusercontent.com/geyu210/NTracking/main/anm/scripts/anms.sh && sudo chmod u+x /usr/bin/anms.sh
+Location="https://raw.githubusercontent.com/geyu210/NTracking/main/"
 
 export PATH=$PATH:$HOME/.local/bin
 

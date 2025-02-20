@@ -66,7 +66,7 @@ CheckSetUp() {
         echo "CpuLessThan=50" >>/var/antctl/config
         echo "MemLessThan=70" >>/var/antctl/config
         echo "HDLessThan=70" >>/var/antctl/config
-        echo "CpuRemove=45" >>/var/antctl/config
+        echo "CpuRemove=70" >>/var/antctl/config
         echo "MemRemove=90" >>/var/antctl/config
         echo "HDRemove=90" >>/var/antctl/config
         echo >>/var/antctl/config
@@ -135,7 +135,7 @@ StartNode() {
     sleep 45
     # status="$(sudo systemctl status $node_name.service --no-page)"
     # PeerId=$(echo "$status" | grep "id=" | cut -f2 -d= | cut -d '`' -f 1)
-    node_metadata="$(curl -s 127.0.0.1:13$node_number/metadata)"
+    node_metadata="$(curl -s 127.0.0.1:$((13*1000+$node_number))/metadata)"
     PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
     node_details_store[$node_number]="$node_name,$PeerId,$(/var/antctl/services/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
     echo "$node_name Started"
@@ -161,7 +161,7 @@ AddNode() {
 Description=$node_name
 [Service]
 User=ant
-ExecStart=/var/antctl/services/$node_name/antnode --bootstrap-cache-dir /var/antctl/bootstrap-cache --root-dir /var/antctl/services/$node_name --port $ntpr$node_number --enable-metrics-server --metrics-server-port 13$node_number --log-output-dest /var/log/antnode/$node_name --max-log-files 1 --max-archived-log-files 1 $RewardsAddress evm-arbitrum-one
+ExecStart=/var/antctl/services/$node_name/antnode --bootstrap-cache-dir /var/antctl/bootstrap-cache --root-dir /var/antctl/services/$node_name --port $(($ntpr*1000+$node_number)) --enable-metrics-server --metrics-server-port $((13*1000+$node_number)) --log-output-dest /var/log/antnode/$node_name --max-log-files 1 --max-archived-log-files 1 $RewardsAddress evm-arbitrum-one
 Restart=always
 #RestartSec=300
 EOF
