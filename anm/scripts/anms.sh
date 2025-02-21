@@ -36,7 +36,7 @@ CheckSetUp() {
             # create blocking file
             touch /var/antctl/block
         fi
-        echo "existing install found loading info test" && echo
+        echo "existing install found loading info test_2_21" && echo
         . /var/antctl/system
         . /var/antctl/counters
         rm /var/antctl/counters
