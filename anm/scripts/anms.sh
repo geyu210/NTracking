@@ -173,44 +173,44 @@ EOF
 
 TearDown() {
     echo "Nuke sequence initiated !!" && echo
-    . /var/antctl/teardown_config
-    sudo rm /etc/cron.d/anm
-    echo "rm /etc/cron.d/anm"
-    sudo systemctl stop antnode*
-    echo "systemctl stop antnode*"
-    sudo rm /etc/systemd/system/antnode*
-    echo "rm /etc/systemd/system/antnode*"
-    sudo systemctl daemon-reload
-    echo "systemctl daemon-reload"
-    sudo rm -rf /var/log/antnode
-    echo "rm -rf /var/log/antnode" && echo
-    unset 'node_details_store[*]'
-    echo "cleared array"
-    for ((i = 1; i <= $RunningNodes; i++)); do
-        PortToClose=$(("$ntpr"000 + $i))
-        echo "deleting firewall rule $PortToClose"
-        sudo ufw delete allow $PortToClose/udp
-    done
-    sudo rm -f /etc/cron.d/scrape
-    sudo rm -f /usr/bin/scrape.sh
-    sudo rm -f $HOME/scrape
-    sudo rm -rf $NodeStorage /var/antctl
-    sudo rm -rf /home/ant/.local/share/autonomi/node
-    sleep 5
-    sudo rm -rf $NodeStorage /var/antctl
-    sudo rm -rf /home/ant/.local/share/autonomi/node
-    # save all wallets for later scraping
-    #cp -r /var/antctl/wallets $HOME/.local/share/wallets
-    sleep 5
-    echo "rm -rf /var/antctl"
-    sudo rm -f /usr/bin/anms.sh
-    echo
-
-    if [[ -f "$HOME/.local/share/no-reboot" ]]; then
-        sleep 1
-    else
-        sudo reboot
-    fi
+#    . /var/antctl/teardown_config
+#    sudo rm /etc/cron.d/anm
+#    echo "rm /etc/cron.d/anm"
+#    sudo systemctl stop antnode*
+#    echo "systemctl stop antnode*"
+#    sudo rm /etc/systemd/system/antnode*
+#    echo "rm /etc/systemd/system/antnode*"
+#    sudo systemctl daemon-reload
+#    echo "systemctl daemon-reload"
+#    sudo rm -rf /var/log/antnode
+#    echo "rm -rf /var/log/antnode" && echo
+#    unset 'node_details_store[*]'
+#    echo "cleared array"
+#    for ((i = 1; i <= $RunningNodes; i++)); do
+#        PortToClose=$(("$ntpr"000 + $i))
+#        echo "deleting firewall rule $PortToClose"
+#        sudo ufw delete allow $PortToClose/udp
+#    done
+#    sudo rm -f /etc/cron.d/scrape
+#    sudo rm -f /usr/bin/scrape.sh
+#    sudo rm -f $HOME/scrape
+#    sudo rm -rf $NodeStorage /var/antctl
+#    sudo rm -rf /home/ant/.local/share/autonomi/node
+#    sleep 5
+#    sudo rm -rf $NodeStorage /var/antctl
+#    sudo rm -rf /home/ant/.local/share/autonomi/node
+#    # save all wallets for later scraping
+#    #cp -r /var/antctl/wallets $HOME/.local/share/wallets
+#    sleep 5
+#    echo "rm -rf /var/antctl"
+#    sudo rm -f /usr/bin/anms.sh
+#    echo
+#
+#    if [[ -f "$HOME/.local/share/no-reboot" ]]; then
+#        sleep 1
+#    else
+#        sudo reboot
+#    fi
 
 }
 
@@ -544,19 +544,19 @@ if [[ ! -f "/var/antctl/config" ]] || [[ "$Action" == "4" ]]; then
 elif (($(echo $AllowCpu))) && (($(echo $AllowMem))) && (($(echo $AllowHD))) && (($(echo $LoadAllow))) && (($(echo $AllowNodeCap))) || [[ "$Action" == "1" ]]; then
     echo "start node" && echo
     StartNode
-elif (($(echo "$RemCpu == 1" | bc))) || (($(echo "$RemMem == 1" | bc))) || (($(echo "$RemHD == 1" | bc))) || (($(echo "$LoadNotAllow == 1" | bc))) || [[ "$Action" == "2" ]] || (($(echo "$TotalNodes > $NodeCap" | bc))); then
-    if (($(echo "$RemHD == 1" | bc))); then
-        StopNode
-        RemoveNode $TotalNodes
-        echo "Node $TotalNodes Removed due to hard drive space" && echo
-    elif (($(echo "$AllowNodeCap == 0" | bc))); then
-        if (($(echo " $StoppedNodes == 0" | bc))); then StopNode; fi
-        RemoveNode $TotalNodes
-        echo "Node $TotalNodes Removed node cap" && echo
-    else
-        echo "stop node" && echo
-        StopNode
-    fi
+#elif (($(echo "$RemCpu == 1" | bc))) || (($(echo "$RemMem == 1" | bc))) || (($(echo "$RemHD == 1" | bc))) || (($(echo "$LoadNotAllow == 1" | bc))) || [[ "$Action" == "2" ]] || (($(echo "$TotalNodes > $NodeCap" | bc))); then
+#    if (($(echo "$RemHD == 1" | bc))); then
+#        StopNode
+#        RemoveNode $TotalNodes
+#        echo "Node $TotalNodes Removed due to hard drive space" && echo
+#    elif (($(echo "$AllowNodeCap == 0" | bc))); then
+#        if (($(echo " $StoppedNodes == 0" | bc))); then StopNode; fi
+#        RemoveNode $TotalNodes
+#        echo "Node $TotalNodes Removed node cap" && echo
+#    else
+#        echo "stop node" && echo
+#        StopNode
+#    fi
 else
 
     LoadTrimmer
