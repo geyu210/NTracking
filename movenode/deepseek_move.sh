@@ -24,7 +24,7 @@ echo "Debug: Creating directory $NEW_BASE"
 mkdir -p "$NEW_BASE"
 echo "Debug: Directory creation status: $?"
 echo "Debug: Listing services:"
-ls -l $SERVICE_DIR/antnode* || echo "No service files found"
+# ls -l $SERVICE_DIR/antnode* || echo "No service files found"
 
 # Progress counter
 total=$((END_NUM - START_NUM + 1))
