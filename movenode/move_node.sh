@@ -18,7 +18,6 @@ else
     exit 1
 fi
 # 获取服务名称
-service_number=$(printf "%03d" $i)
 service_file="/etc/systemd/system/antnode${service_number}.service"
 
 # 检查服务文件是否存在
