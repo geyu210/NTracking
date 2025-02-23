@@ -1,5 +1,5 @@
 #!/bin/bash
-# sudo wget https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/deepseek_move.sh && sudo chmod u+x ./deepseek_move.sh
+# sudo wget https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/deepseek_move.sh && sudo chmod +x ./deepseek_move.sh
 set -eo pipefail
 
 # Configuration parameters
@@ -20,7 +20,8 @@ fi
 # Initialize log
 exec > >(tee -a "$LOG_FILE") 2>&1
 echo "====== Migration started at $(date) ======"
-
+echo "START_NUM = $START_NUM"
+echo "END_NUM = $END_NUM"
 # Create target directory
 mkdir -p "$NEW_BASE"
 
