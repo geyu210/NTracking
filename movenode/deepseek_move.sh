@@ -20,20 +20,24 @@ fi
 # Initialize log
 exec > >(tee -a "$LOG_FILE") 2>&1
 echo "====== Migration started at $(date) ======"
-echo "START_NUM = $START_NUM"
-echo "END_NUM = $END_NUM"
-# Create target directory
+echo "Debug: Creating directory $NEW_BASE"
 mkdir -p "$NEW_BASE"
+echo "Debug: Directory creation status: $?"
+echo "Debug: Listing services:"
+ls -l $SERVICE_DIR/antnode* || echo "No service files found"
 
 # Progress counter
 total=$((END_NUM - START_NUM + 1))
 current=0
+echo "Debug: Will process nodes from $START_NUM to $END_NUM (total: $total)"
+
 for ((i=START_NUM; i<=END_NUM; i++)); do
     # Format node number (three digits)
     node_num=$(printf "%03d" $i)
     service_name="${BASE_NAME}${node_num}"
     service_file="${SERVICE_DIR}/${service_name}.service"
     
+    echo "Debug: Checking service file: $service_file"
     ((current++))
     echo "[Progress ${current}/${total}] Processing ${service_name}"
 
