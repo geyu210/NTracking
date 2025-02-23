@@ -1,5 +1,5 @@
 #!/bin/bash
-# sudo wget https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/deepseek_move.sh && sudo chmod +x ./deepseek_move.sh
+# sudo rm -f ./deepseek_move.sh* && sudo wget https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/deepseek_move.sh && sudo chmod +x ./deepseek_move.sh
 set -eo pipefail
 
 # Configuration parameters
@@ -28,8 +28,6 @@ mkdir -p "$NEW_BASE"
 # Progress counter
 total=$((END_NUM - START_NUM + 1))
 current=0
-echo "START_NUM = $START_NUM"
-echo "END_NUM = $END_NUM"
 for ((i=START_NUM; i<=END_NUM; i++)); do
     # Format node number (three digits)
     node_num=$(printf "%03d" $i)
