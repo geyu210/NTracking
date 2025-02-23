@@ -1,5 +1,5 @@
 #!/bin/bash
-# sudo rm -f ./move_node.sh && sudo wget https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/move_node.sh && sudo chmod +x move_node.sh
+# sudo rm -f ./move_node.sh && sudo wget --no-cache https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/move_node.sh && sudo chmod +x move_node.sh
 #todo: 1. 暂停当前服务
 #sudo systemctl stop antnode001
 
@@ -13,12 +13,14 @@
 if [ -f "/var/antctl/movenode_config" ]; then
     source /var/antctl/movenode_config
     service_number=$(printf "%03d" $service_number)
+    echo "service_number: $service_number"
 else
     echo "配置文件 /var/antctl/movenode_config 不存在"
     exit 1
 fi
 # 获取服务名称
-service_file="/etc/systemd/system/antnode${service_number}.service"
+service_name="antnode${service_number}"
+service_file="/etc/systemd/system/${service_name}.service"
 
 # 检查服务文件是否存在
 if [ ! -f "$service_file" ]; then
@@ -29,6 +31,7 @@ fi
 # 备份原始服务文件
 cp "$service_file" "${service_file}.bak"
 echo "已备份服务文件到 ${service_file}.bak"
+
 
 # 定义旧路径和新路径
 old_path="/var/antctl/services//${service_name}"
