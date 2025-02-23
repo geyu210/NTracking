@@ -7,14 +7,14 @@
 # 读取配置文件
 if [ -f "/var/antctl/movenode_config" ]; then
     source /var/antctl/movenode_config
-    service_number=$(printf "%03d" $service_number)
+    # service_number=$(printf "%03d" $service_number)
     echo "service_number: $service_number"
 else
     echo "配置文件 /var/antctl/movenode_config 不存在"
     exit 1
 fi
 # 获取服务名称
-service_name="antnode${service_number}"
+service_name="antnode$(printf "%03d" $service_number)"
 service_file="/etc/systemd/system/${service_name}.service"
 
 # 检查服务文件是否存在
@@ -68,8 +68,18 @@ if sudo systemctl restart "${service_name}"; then
     
     # 更新配置文件中的节点编号
     next_number=$((service_number + 1))
-    echo "service_number=$next_number" | sudo tee /var/antctl/movenode_config
-    echo "配置文件已更新，下一个节点编号: $next_number"
+    # 使用临时文件方式更新配置
+    echo "service_number=$next_number" | sudo tee /var/antctl/movenode_config.tmp > /dev/null
+    sudo mv /var/antctl/movenode_config.tmp /var/antctl/movenode_config
+    sudo chmod 644 /var/antctl/movenode_config
+    
+    # 验证更新是否成功
+    if [ -f "/var/antctl/movenode_config" ]; then
+        echo "配置文件已更新，下一个节点编号: $next_number"
+    else
+        echo "配置文件更新失败"
+        exit 1
+    fi
 else
     echo "服务重启失败！请检查日志：journalctl -u ${service_name}"
     exit 1
