@@ -40,6 +40,7 @@ echo "Debug: SERVICE_DIR=${SERVICE_DIR}"
 
 for ((i=START_NUM; i<=END_NUM; i++)); do
     # Format node number (three digits)
+    echo "Debug: Processing node number $i"
     node_num=$(printf "%03d" $i)
     service_name="${BASE_NAME}${node_num}"
     service_file="${SERVICE_DIR}/${service_name}.service"
