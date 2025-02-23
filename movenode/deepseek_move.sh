@@ -1,6 +1,6 @@
 #!/bin/bash
 # sudo rm -f ./deepseek_move.sh* && sudo wget https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/deepseek_move.sh && sudo chmod +x ./deepseek_move.sh
-set -eo pipefail
+# set -eo pipefail
 
 # Configuration parameters
 BASE_NAME="antnode"
