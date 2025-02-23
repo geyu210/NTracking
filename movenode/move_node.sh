@@ -4,11 +4,6 @@
 #sudo systemctl stop antnode001
 
 
-# 检查是否提供了一个参数（服务名称）
-# if [ $# -ne 1 ]; then
-#     echo "用法: $0 <service_name>"
-#     exit 1
-# fi
 # 读取配置文件
 if [ -f "/var/antctl/movenode_config" ]; then
     source /var/antctl/movenode_config
@@ -29,7 +24,7 @@ if [ ! -f "$service_file" ]; then
 fi
 
 # 备份原始服务文件
-cp "$service_file" "${service_file}.bak"
+sudo cp "$service_file" "${service_file}.bak"
 echo "已备份服务文件到 ${service_file}.bak"
 
 
@@ -38,27 +33,25 @@ old_path="/var/antctl/services//${service_name}"
 new_path="/datapool/autonomi/NTracking_nodes/services/${service_name}"
 
 # Stop service
-if systemctl is-active --quiet "$service_name"; then
+if sudo systemctl is-active --quiet "$service_name"; then
     echo "Stopping service..."
-    systemctl stop "$service_name" || {
+    sudo systemctl stop "$service_name" || {
         echo "Failed to stop service, skipping this node"
         exit 1
     }
 fi
 
-    if [ -d "$old_path" ]; then
-        echo "Migrating data directory..."
-        mkdir -p "$new_path"
-        rsync -a --delete "$old_path/" "$new_path/" #&& rm -rf "$old_path"
-        chown -R ant:ant "$new_path"
-    else
-        echo "Source directory ${old_path} does not exist"
-    fi
-
-
+if [ -d "$old_path" ]; then
+    echo "Migrating data directory..."
+    sudo mkdir -p "$new_path"
+    sudo rsync -a --delete "$old_path/" "$new_path/"
+    sudo chown -R ant:ant "$new_path"
+else
+    echo "Source directory ${old_path} does not exist"
+fi
 
 # 使用 sed 替换服务文件中所有匹配的旧路径为新路径
-sed -i "s#${old_path}#${new_path}#g" "$service_file"
+sudo sed -i "s#${old_path}#${new_path}#g" "$service_file"
 
 # 确认修改完成
 echo "已更新 $service_file 中的路径："
@@ -72,6 +65,11 @@ echo "正在重启服务 ${service_name}..."
 if sudo systemctl restart "${service_name}"; then
     echo "服务重启成功"
     sudo systemctl status "${service_name}" --no-pager | head -n 5
+    
+    # 更新配置文件中的节点编号
+    next_number=$((service_number + 1))
+    echo "service_number=$next_number" | sudo tee /var/antctl/movenode_config
+    echo "配置文件已更新，下一个节点编号: $next_number"
 else
     echo "服务重启失败！请检查日志：journalctl -u ${service_name}"
     exit 1
