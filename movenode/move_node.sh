@@ -30,7 +30,7 @@ echo "已备份服务文件到 ${service_file}.bak"
 
 # 定义旧路径和新路径
 old_path="/var/antctl/services//${service_name}"
-new_path="/datapool/autonomi/NTracking_nodes/services/${service_name}"
+new_path="/datapool/autonomi/new_nodes/services/${service_name}"
 
 # Stop service
 if sudo systemctl is-active --quiet "$service_name"; then
