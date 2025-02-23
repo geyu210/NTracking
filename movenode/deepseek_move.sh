@@ -31,6 +31,13 @@ total=$((END_NUM - START_NUM + 1))
 current=0
 echo "Debug: Will process nodes from $START_NUM to $END_NUM (total: $total)"
 
+# Add error checking for required directories
+echo "Debug: Checking required directories..."
+echo "Debug: OLD_BASE=${OLD_BASE}"
+[ -d "$OLD_BASE" ] && echo "OLD_BASE exists" || echo "OLD_BASE does not exist"
+echo "Debug: SERVICE_DIR=${SERVICE_DIR}"
+[ -d "$SERVICE_DIR" ] && echo "SERVICE_DIR exists" || echo "SERVICE_DIR does not exist"
+
 for ((i=START_NUM; i<=END_NUM; i++)); do
     # Format node number (three digits)
     node_num=$(printf "%03d" $i)
@@ -38,6 +45,11 @@ for ((i=START_NUM; i<=END_NUM; i++)); do
     service_file="${SERVICE_DIR}/${service_name}.service"
     
     echo "Debug: Checking service file: $service_file"
+    if [ -f "$service_file" ]; then
+        echo "Debug: Service file exists"
+    else
+        echo "Debug: Service file does not exist"
+    fi
     ((current++))
     echo "[Progress ${current}/${total}] Processing ${service_name}"
 
