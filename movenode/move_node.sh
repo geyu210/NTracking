@@ -29,7 +29,7 @@ echo "已备份服务文件到 ${service_file}.bak"
 
 
 # 定义旧路径和新路径
-old_path="/var/antctl/services//${service_name}"
+old_path="/var/antctl/services/${service_name}"
 new_path="/datapool/autonomi/new_nodes/services/${service_name}"
 
 # Stop service
@@ -51,8 +51,8 @@ else
 fi
 
 # 使用 sed 替换服务文件中所有匹配的旧路径为新路径
-sudo sed -i "s#${old_path}#${new_path}#g" "$service_file"
-
+# sudo sed -i "s#${old_path}#${new_path}#g" "$service_file"
+sudo sed -i "s#/var/antctl/services/\+${service_name}#${new_path}#g" "$service_file"
 # 确认修改完成
 echo "已更新 $service_file 中的路径："
 echo "  ${old_path} -> ${new_path}"
