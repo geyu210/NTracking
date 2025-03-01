@@ -137,7 +137,7 @@ StartNode() {
     # PeerId=$(echo "$status" | grep "id=" | cut -f2 -d= | cut -d '`' -f 1)
     node_metadata="$(curl -s 127.0.0.1:$((13*1000+$node_number))/metadata)"
     PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
-    node_details_store[$node_number]="$node_name,$PeerId,$(/var/antctl/services/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
+    node_details_store[$node_number]="$node_name,$PeerId,$($NodeStorage/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
     echo "$node_name Started"
     sed -i 's/CounterStart=.*/CounterStart='$DelayStart'/g' /var/antctl/counters
     echo "reset node start timer" && echo
@@ -150,18 +150,18 @@ AddNode() {
     echo ""$time_hour":"$time_min" Add $node_name $RewardsAddress" >>/var/antctl/simplelog
     echo ""$time_hour":"$time_min" Add $node_name $RewardsAddress" >>/var/antctl/wallet-log
     echo "Adding $node_name"
-    sudo mkdir -p /var/antctl/services/$node_name /var/log/antnode/$node_name
-    echo "mkdir -p /var/antctl/services/$node_name"
-    sudo cp $NodePath /var/antctl/services/$node_name
-    echo "cp $NodePath /var/antctl/services/$node_name"
-    sudo chown -R ant:ant /var/antctl/services/$node_name /var/log/antnode/$node_name /var/antctl/services/$node_name/antnode
+    sudo mkdir -p $NodeStorage/$node_name /var/log/antnode/$node_name
+    echo "mkdir -p $NodeStorage/$node_name"
+    sudo cp $NodePath $NodeStorage/$node_name
+    echo "cp $NodePath $NodeStorage/$node_name"
+    sudo chown -R ant:ant $NodeStorage/$node_name /var/log/antnode/$node_name $NodeStorage/$node_name/antnode
     echo "ownership changed to user ant"
     sudo tee /etc/systemd/system/"$node_name".service 2>&1 >/dev/null <<EOF
 [Unit]
 Description=$node_name
 [Service]
 User=ant
-ExecStart=/var/antctl/services/$node_name/antnode --bootstrap-cache-dir /var/antctl/bootstrap-cache --root-dir /var/antctl/services/$node_name --port $(($ntpr*1000+$node_number)) --enable-metrics-server --metrics-server-port $((13*1000+$node_number)) --log-output-dest /var/log/antnode/$node_name --max-log-files 1 --max-archived-log-files 1 $RewardsAddress evm-arbitrum-one
+ExecStart=$NodeStorage/$node_name/antnode --bootstrap-cache-dir /var/antctl/bootstrap-cache --root-dir $NodeStorage/$node_name --port $(($ntpr*1000+$node_number)) --enable-metrics-server --metrics-server-port $((13*1000+$node_number)) --log-output-dest /var/log/antnode/$node_name --max-log-files 1 --max-archived-log-files 1 $RewardsAddress evm-arbitrum-one
 Restart=always
 #RestartSec=300
 EOF
@@ -221,8 +221,8 @@ RemoveNode() {
     echo "Removing $node_name" && echo
     sudo systemctl stop --now $node_name
     echo "Stopping $node_name"
-    sudo rm -rf /var/antctl/services/$node_name /var/log/antnode/$node_name
-    echo "rm -rf /var/antctl/services/$node_name /var/log/antnode/$node_name"
+    sudo rm -rf $NodeStorage/$node_name /var/log/antnode/$node_name
+    echo "rm -rf $NodeStorage/$node_name /var/log/antnode/$node_name"
     sudo rm /etc/systemd/system/$node_name.service
     echo "rm /etc/systemd/system/$node_name.service"
     sudo systemctl daemon-reload
@@ -271,8 +271,8 @@ UpgradeNode() {
     echo ""$time_hour":"$time_min" Upgrade $node_name running" >>/var/antctl/simplelog
     echo "upgradeing $node_name"
     
-    echo "sudo cp -f $NodePath /var/antctl/services/$node_name/antnode"
-    sudo cp -f $NodePath /var/antctl/services/$node_name/antnode
+    echo "sudo cp -f $NodePath $NodeStorage/$node_name/antnode"
+    sudo cp -f $NodePath $NodeStorage/$node_name/antnode
     sudo systemctl restart $node_name.service
     echo "sudo systemctl restart $node_name.service"
 
@@ -291,7 +291,7 @@ UpgradeNode() {
     # PeerId=$(echo "$status" | grep "id=" | cut -f2 -d= | cut -d '`' -f 1)
     node_metadata="$(curl -s 127.0.0.1:$((13*1000+$node_number))/metadata)"
     PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
-    node_details_store[$node_number]="$node_name,$PeerId,$(/var/antctl/services/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
+    node_details_store[$node_number]="$node_name,$PeerId,$($NodeStorage/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
     echo "updated array"
     sed -i 's/CounterUpgrade=.*/CounterUpgrade='$DelayUpgrade'/g' /var/antctl/counters
     echo "reset node upgrade timer" && echo
@@ -305,10 +305,10 @@ StoppedUpgrade() {
     ## remove old node data on upgrade
     #sudo rm -rf /var/antctl/services/$node_name/*
     #echo "rm -rf /var/antctl/services/$node_name/*"
-    sudo cp $NodePath /var/antctl/services/$node_name
-    echo "cp $NodePath /var/antctl/services/$node_name"
+    sudo cp $NodePath $NodeStorage/$node_name
+    echo "cp $NodePath $NodeStorage/$node_name"
     PIS=$(echo "${node_details_store[$node_number]}" | awk -F',' '{print $2}')
-    node_details_store[$node_number]="$node_name,$PIS,$(/var/antctl/services/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),STOPPED"
+    node_details_store[$node_number]="$node_name,$PIS,$($NodeStorage/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),STOPPED"
     echo "updated array" && echo
 }
 
@@ -317,7 +317,7 @@ CalculateValues() {
         echo "${node_details_store[$num]}"
     done)
 
-    TotalNodes=$(ls /var/antctl/services | wc -l)
+    TotalNodes=$(ls $NodeStorage | wc -l)
     RunningNodes=$(echo "$ArrayAsString" | grep -c "RUNNING")
     StoppedNodes=$(echo "$ArrayAsString" | grep -c "STOPPED")
     if (($(echo "$StoppedNodes > 0" | bc))); then
@@ -470,11 +470,11 @@ ShunnGun() {
         # copy wallet to folder for later scraping
         WalletDir=""$(date +%s)"-"$node_name"-Shunn"
         mkdir -p $HOME/.local/share/wallets/$WalletDir/wallet
-        cp -r /var/antctl/services/$node_name/wallet/* $HOME/.local/share/wallets/$WalletDir/wallet
-        sudo rm -rf /var/antctl/services/$node_name/*
+        cp -r $NodeStorage/$node_name/wallet/* $HOME/.local/share/wallets/$WalletDir/wallet
+        sudo rm -rf $NodeStorage/$node_name/*
         sleep 5
-        sudo cp $NodePath /var/antctl/services/$node_name
-        echo "cp $NodePath /var/antctl/services/$node_name"
+        sudo cp $NodePath $NodeStorage/$node_name
+        echo "cp $NodePath $NodeStorage/$node_name"
         sleep 5
         #restart node
         echo "Starting $node_name"
@@ -483,7 +483,7 @@ ShunnGun() {
         sleep 30
         status="$(sudo systemctl status $node_name.service --no-page)"
         PeerId=$(echo "$status" | grep "id=" | cut -f2 -d= | cut -d '`' -f 1)
-        node_details_store[$node_number]="$node_name,$PeerId,$(/var/antctl/services/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
+        node_details_store[$node_number]="$node_name,$PeerId,$($NodeStorage/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
         echo "$node_name Started"
         sed -i 's/CounterStart=.*/CounterStart='$DelayStart'/g' /var/antctl/counters
         echo "reset node start timer" && echo
@@ -513,16 +513,16 @@ LoadTrimmer() {
             echo "replacing $node_name"
             sudo systemctl stop $node_name
             echo "systemctl stop $node_name"
-            sudo rm -rf /var/antctl/services/$node_name/*
-            echo "rm -rf /var/antctl/services/$node_name/*"
-            sudo cp $NodePath /var/antctl/services/$node_name
-            echo "cp $NodePath /var/antctl/services/$node_name"
+            sudo rm -rf $NodeStorage/$node_name/*
+            echo "rm -rf $NodeStorage/$node_name/*"
+            sudo cp $NodePath $NodeStorage/$node_name
+            echo "cp $NodePath $NodeStorage/$node_name"
             sudo systemctl start $node_name
             echo "systemctl start $node_name"
             sleep 45
             node_metadata="$(curl -s 127.0.0.1:$((13*1000+$node_number))/metadata)"
             PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
-            node_details_store[$node_number]="$node_name,$PeerId,$(/var/antctl/services/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
+            node_details_store[$node_number]="$node_name,$PeerId,$($NodeStorage/$node_name/antnode --version | awk 'NR==1 {print $3}' | cut -c2-),RUNNING"
             echo "updated array"
         fi
     fi
