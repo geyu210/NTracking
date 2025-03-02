@@ -27,8 +27,16 @@ if [ ! -f "$service_file" ]; then
 fi
 
 echo "[$current_time] 开始复制新版本节点文件..."
+echo "原节点版本："
+old_version=$($NodeStorage/$service_name/antnode --version | awk 'NR==1 {print $3}')
+echo $old_version
+
+echo "[$current_time] 复制新节点文件..."
 sudo cp -f /home/geyu/.local/bin/antnode $NodeStorage/$service_name/
 echo "[$current_time] 节点文件复制完成"
+echo "更新后节点版本："
+new_version=$($NodeStorage/$service_name/antnode --version | awk 'NR==1 {print $3}')
+echo $new_version
 
 # 更新文件权限
 sudo chown ant:ant $NodeStorage/$service_name/antnode
