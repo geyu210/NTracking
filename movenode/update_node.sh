@@ -57,8 +57,6 @@ sudo systemctl restart $service_name.service
 echo "[$current_time] 等待节点启动..."
 sleep 15
 
-echo "[$current_time] 检查节点状态..."
-sudo systemctl status antnode001.service --no-page
 
 
 echo "[$current_time] 获取节点元数据..."
