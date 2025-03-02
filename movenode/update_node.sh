@@ -54,6 +54,7 @@ sleep 15
 echo "[$current_time] 检查节点状态..."
 sudo systemctl status antnode001.service --no-page
 
+
 echo "[$current_time] 获取节点元数据..."
 node_metadata="$(curl -s 127.0.0.1:$((13*1000+$next_update))/metadata)"
 echo "13*1000+$next_update = $((13*1000+$next_update)) "
