@@ -42,6 +42,7 @@ echo $new_version
 sudo chown ant:ant $NodeStorage/$service_name/antnode
 if [ $? -eq 0 ]; then
     log_message+="[$current_time] 文件权限更新成功\n"
+
 else
     log_message+="[$current_time] 警告：文件权限更新失败\n"
 fi
