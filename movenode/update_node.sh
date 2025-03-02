@@ -54,7 +54,6 @@ fi
 
 
 
-
 echo "[$current_time] 重启节点服务..."
 sudo systemctl restart $service_name.service
 echo "[$current_time] 等待节点启动..."
