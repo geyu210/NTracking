@@ -50,7 +50,7 @@ echo "[$current_time] 获取节点元数据..."
 node_metadata="$(curl -s 127.0.0.1:$((13*1000+$next_update))/metadata)"
 echo "13*1000+$next_update = $((13*1000+$next_update)) "
 PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
-echo "$service_name Started"
+echo "$service_name Started PeerId=$PeerId"
 
 echo "[$current_time] 更新配置文件..."
 echo "next_update=$((next_update+1))" | sudo tee /var/antctl/update_config.tmp > /dev/null
