@@ -46,7 +46,6 @@ else
     log_message+="[$current_time] 警告：文件权限更新失败\n"
 fi
 
-
 echo "[$current_time] 重启节点服务..."
 sudo systemctl restart $service_name.service
 echo "[$current_time] 等待节点启动..."
