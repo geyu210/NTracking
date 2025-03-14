@@ -9,6 +9,13 @@ echo "[$current_time] 开始更新节点"
 # 读取配置文件
 if [ -f "/var/antctl/update_config" ]; then
     source /var/antctl/update_config
+    
+    # 检查是否达到停止更新的节点编号
+    if [ "$next_update" -ge "$stop_at" ]; then
+        echo "[$current_time] 已达到预定的停止更新节点编号($stop_at)，程序终止"
+        exit 0
+    fi
+    
     echo "[$current_time] 准备更新节点: $next_update"
 else
     echo "[$current_time] 错误：配置文件 /var/antctl/update_config 不存在"
