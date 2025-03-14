@@ -73,9 +73,8 @@ PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {prin
 echo "$service_name Started PeerId=$PeerId"
 
 echo "[$current_time] 更新配置文件..."
-echo "next_update=$((next_update+1))" | sudo tee /var/antctl/update_config.tmp > /dev/null
-sudo mv /var/antctl/update_config.tmp /var/antctl/update_config
-sudo chmod 644 /var/antctl/update_config
+# 使用sed仅替换next_update的值，保留其他内容
+sudo sed -i "s/^next_update=.*/next_update=$((next_update+1))/" /var/antctl/update_config
 echo "[$current_time] 更新完成，下一个更新节点编号: $((next_update+1))"
 
 
