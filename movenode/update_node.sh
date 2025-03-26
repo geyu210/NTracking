@@ -1,3 +1,4 @@
+# antup node --version 0.3.8
 # sudo rm -f ./update_node.sh && sudo wget --no-cache https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/update_node.sh && sudo chmod +x update_node.sh
 # tail -f /var/antctl/update_node.log
 
