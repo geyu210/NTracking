@@ -1,4 +1,5 @@
 # sudo rm -f ./update_node.sh && sudo wget --no-cache https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/update_node.sh && sudo chmod +x update_node.sh
+# tail -f /var/antctl/update_node.log
 
 . /var/antctl/config
 
@@ -53,18 +54,10 @@ else
     log_message+="[$current_time] 警告：文件权限更新失败\n"
 fi
 
-
-
-
-
-
-
 echo "[$current_time] 重启节点服务..."
 sudo systemctl restart $service_name.service
 echo "[$current_time] 等待节点启动..."
 sleep 15
-
-
 
 echo "[$current_time] 获取节点元数据..."
 node_metadata="$(curl -s 127.0.0.1:$((13*1000+$next_update))/metadata)"
