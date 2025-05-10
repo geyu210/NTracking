@@ -1,4 +1,5 @@
-# antup node --version 0.3.8
+# antup node --version 0.3.9
+# sudo nano  update_config 
 # sudo rm -f ./update_node.sh && sudo wget --no-cache https://raw.githubusercontent.com/geyu210/NTracking/main/movenode/update_node.sh && sudo chmod +x update_node.sh
 # tail -f /var/antctl/update_node.log
 
@@ -55,16 +56,21 @@ else
     log_message+="[$current_time] 警告：文件权限更新失败\n"
 fi
 
-echo "[$current_time] 重启节点服务..."
-sudo systemctl restart $service_name.service
-echo "[$current_time] 等待节点启动..."
-sleep 15
-
-echo "[$current_time] 获取节点元数据..."
-node_metadata="$(curl -s 127.0.0.1:$((13*1000+$next_update))/metadata)"
-echo "13*1000+$next_update = $((13*1000+$next_update)) "
-PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
-echo "$service_name Started PeerId=$PeerId"
+# 检查节点编号是否在需要重启的范围内
+if [ "$next_update" -ge "$restart_start" ] && [ "$next_update" -le "$restart_end" ]; then
+    echo "[$current_time] 节点编号 $next_update 在重启范围内 ($restart_start-$restart_end)，执行重启..."
+    echo "[$current_time] 重启节点服务..."
+    sudo systemctl restart $service_name.service
+    echo "[$current_time] 等待节点启动..."
+    sleep 15
+    echo "[$current_time] 获取节点元数据..."
+    node_metadata="$(curl -s 127.0.0.1:$((13*1000+$next_update))/metadata)"
+    echo "13*1000+$next_update = $((13*1000+$next_update)) "
+    PeerId="$(echo "$node_metadata" | grep ant_networking_peer_id | awk 'NR==3 {print $1}' | cut -d'"' -f 2)"
+    echo "$service_name Started PeerId=$PeerId"
+else
+    echo "[$current_time] 节点编号 $next_update 不在重启范围内，跳过重启步骤"
+fi
 
 echo "[$current_time] 更新配置文件..."
 # 使用sed仅替换next_update的值，保留其他内容
