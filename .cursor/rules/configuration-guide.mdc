@@ -1,0 +1,45 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 配置文件指南
+
+## 系统配置文件
+- [config](mdc:var/antctl/config) - 系统主配置文件
+  - 包含系统级配置参数
+  - 定义环境变量和路径
+
+## 更新配置文件
+- [update_config](mdc:var/antctl/update_config) - 节点更新配置文件
+  - 必需参数：
+    - `next_update`: 下一个要更新的节点编号
+    - `stop_at`: 停止更新的节点编号
+    - `restart_start`: 需要重启的起始节点编号
+    - `restart_end`: 需要重启的结束节点编号
+
+## 配置文件示例
+```bash
+# update_config 示例
+next_update=1
+stop_at=100
+restart_start=1
+restart_end=50
+```
+
+## 配置文件位置
+- 系统配置文件：`/var/antctl/config`
+- 更新配置文件：`/var/antctl/update_config`
+
+## 配置文件管理
+1. 配置文件权限管理
+   - 建议使用 `sudo` 进行修改
+   - 确保文件所有者正确
+
+2. 配置文件备份
+   - 建议在修改前备份
+   - 可以使用 `cp` 命令创建备份
+
+3. 配置文件验证
+   - 修改后检查语法
+   - 确保所有必需参数都存在

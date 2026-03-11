@@ -5,6 +5,28 @@
 
 . /var/antctl/config
 
+# 设置锁文件
+LOCK_FILE="/var/antctl/update_node.lock"
+LOG_FILE="/var/antctl/update_node.log"
+
+# 检查锁文件
+if [ -f "$LOCK_FILE" ]; then
+    # 检查锁文件是否过期（超过5分钟）
+    if [ $(( $(date +%s) - $(stat -c %Y "$LOCK_FILE") )) -gt 60 ]; then
+        echo "[$(date "+%Y-%m-%d %H:%M:%S")] 发现过期的锁文件，正在清理..."
+        rm -f "$LOCK_FILE"
+    else
+        echo "[$(date "+%Y-%m-%d %H:%M:%S")] 另一个更新进程正在运行，退出"
+        exit 0
+    fi
+fi
+
+# 创建锁文件
+touch "$LOCK_FILE"
+
+# 设置退出时清理锁文件
+trap 'rm -f "$LOCK_FILE"; exit' EXIT INT TERM
+
 # 获取当前时间
 current_time=$(date "+%Y-%m-%d %H:%M:%S")
 echo "[$current_time] 开始更新节点"
@@ -63,6 +85,7 @@ if [ "$next_update" -ge "$restart_start" ] && [ "$next_update" -le "$restart_end
     sudo systemctl restart $service_name.service
     echo "[$current_time] 等待节点启动..."
     sleep 15
+
     echo "[$current_time] 获取节点元数据..."
     node_metadata="$(curl -s 127.0.0.1:$((13*1000+$next_update))/metadata)"
     echo "13*1000+$next_update = $((13*1000+$next_update)) "

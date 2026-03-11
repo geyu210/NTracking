@@ -1,0 +1,35 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 节点更新管理指南
+
+## 主要脚本
+- [update_node.sh](mdc:movenode/update_node.sh) - 节点更新主脚本
+
+## 脚本功能说明
+该脚本用于自动化更新节点服务，主要功能包括：
+1. 节点版本更新
+2. 服务重启管理
+3. 更新进度追踪
+4. 并发控制
+
+## 重要配置文件
+- `/var/antctl/update_config` - 更新配置文件
+- `/var/antctl/update_node.log` - 更新日志文件
+- `/var/antctl/update_node.lock` - 更新锁文件
+
+## 使用说明
+1. 脚本执行前需要确保配置文件存在
+2. 配置文件需要包含以下参数：
+   - next_update: 下一个要更新的节点编号
+   - stop_at: 停止更新的节点编号
+   - restart_start: 需要重启的起始节点编号
+   - restart_end: 需要重启的结束节点编号
+
+## 注意事项
+1. 脚本使用锁机制防止并发执行
+2. 锁文件超过60秒会自动清理
+3. 更新过程中会自动记录日志
+4. 节点重启后会等待15秒确保服务启动

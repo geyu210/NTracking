@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 日志管理指南
+
+## 日志文件
+- [update_node.log](mdc:var/antctl/update_node.log) - 节点更新日志
+  - 记录所有更新操作
+  - 包含时间戳和详细信息
+
+## 日志格式
+```bash
+[2024-03-21 10:30:00] 开始更新节点
+[2024-03-21 10:30:01] 准备更新节点: 1
+[2024-03-21 10:30:02] 目标节点: antnode001
+```
+
+## 日志查看方法
+1. 实时查看
+   ```bash
+   tail -f /var/antctl/update_node.log
+   ```
+
+2. 查看最后N行
+   ```bash
+   tail -n 100 /var/antctl/update_node.log
+   ```
+
+3. 搜索特定内容
+   ```bash
+   grep "错误" /var/antctl/update_node.log
+   ```
+
+## 日志管理
+1. 日志轮转
+   - 建议定期归档
+   - 可以使用 logrotate 管理
+
+2. 日志清理
+   - 定期清理旧日志
+   - 保留必要的日志记录
+
+3. 日志分析
+   - 检查更新状态
+   - 排查问题
+   - 统计更新情况

@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 项目结构说明
+
+## 目录结构
+```
+movenode/
+├── update_node.sh    # 节点更新脚本
+└── update_config     # 更新配置文件
+```
+
+## 系统目录
+- `/var/antctl/` - 系统配置和日志目录
+  - `config` - 系统配置文件
+  - `update_config` - 更新配置文件
+  - `update_node.log` - 更新日志
+  - `update_node.lock` - 更新锁文件
+
+## 服务相关
+- `/etc/systemd/system/` - 系统服务目录
+  - `antnode*.service` - 节点服务文件
+
+## 节点存储
+- `$NodeStorage/` - 节点文件存储目录
+  - `antnode*/` - 各个节点的目录
+    - `antnode` - 节点可执行文件
